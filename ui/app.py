@@ -6,6 +6,7 @@ import sys
 import os
 import json
 import streamlit as st
+import plotly.graph_objects as go
 
 # Make repo root importable
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -124,6 +125,23 @@ with tab1:
         alloc = diag.get('allocation', {})
         render_allocation_chart(alloc.get('breakdown', {}), alloc.get('recommended_equity_pct', 0), alloc.get('actual_equity_pct', 0))
     render_overlap_pairs(diag.get('overlap', {}).get('pairs', []))
+    expense = diag.get('expense_drag', {})
+    total_drag_20 = expense.get('total_drag_20yr_inr', 0)
+    if total_drag_20 > 0:
+        drag_10 = sum(f.get('expense_drag', {}).get(10, 0) for f in folios)
+        drag_20 = total_drag_20
+        drag_30 = sum(f.get('expense_drag', {}).get(30, 0) for f in folios)
+        st.error(f'At current expense ratios, you will lose Rs {drag_20:,.0f} over 20 years vs direct plans.')
+        fig = go.Figure(go.Bar(
+            x=['10 years', '20 years', '30 years'],
+            y=[drag_10, drag_20, drag_30],
+            marker_color=['#FAC775', '#EF9F27', '#BA7517'],
+            text=[f'Rs {v:,.0f}' for v in [drag_10, drag_20, drag_30]],
+            textposition='outside'
+        ))
+        fig.update_layout(title='Wealth lost to expense ratios vs direct plans',
+                        yaxis_title='Rs lost', height=300)
+        st.plotly_chart(fig, use_container_width=True)
 
 with tab2:
     for v in verdicts:
