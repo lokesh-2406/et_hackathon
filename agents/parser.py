@@ -92,8 +92,27 @@ def parse_regex(text: str) -> list[dict]:
 
 def parse_llm_fallback(text: str) -> list[dict]:
     snippet = text[:4000]
-    prompt = f"Extract ALL mutual fund folio data from this text. Return ONLY JSON array.\nText:\n{snippet}"
-    raw = chat([{'role': 'user', 'content': prompt}], temperature=0.1, max_tokens=2000)
+    prompt = f'''
+        You are a financial data extractor. Extract ALL mutual fund folio data from
+        this CAMS/KFintech statement text. Return ONLY valid JSON, no markdown.
+        Format:
+        [{{
+        "folio": "folio number",
+        "scheme_name": "full scheme name",
+        "isin": "ISIN code or empty string",
+        "total_units": current balance units as number,
+        "transactions": [
+        {{"date": "DD-Mon-YYYY", "type": "Purchase/SIP",
+        "amount": number, "units": number, "nav": number}}
+        ]
+        }}]
+        Statement text:
+        {snippet}
+        '''
+    raw = chat([{'role': 'user', 'content': prompt}], temperature=0.1,max_tokens=2000)
+
+    # prompt = f"Extract ALL mutual fund folio data from this text. Return ONLY JSON array.\nText:\n{snippet}"
+    # raw = chat([{'role': 'user', 'content': prompt}], temperature=0.1, max_tokens=2000)
     raw = re.sub(r'^```json\s*|^```\s*|```$', '', raw.strip(), flags=re.MULTILINE).strip()
     try:
         return json.loads(raw)

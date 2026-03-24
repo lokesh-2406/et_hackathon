@@ -158,7 +158,7 @@ def _build_triggers(state: dict) -> list[dict]:
     if alloc and not alloc.get('is_balanced', True):
         triggers.append({
             'fund_name':     'PORTFOLIO',
-            'trigger_type':  'ALLOCATION_IMBALANCE',
+            'trigger_type':  f'ALLOCATION_IMBALANCE: {alloc.get("deviation_pct", 0):.1f}% deviation from recommended',
             'threshold':     f'Recommended equity: {alloc.get("recommended_equity_pct", 0):.0f}%',
             'current_value': f'Actual equity: {alloc.get("actual_equity_pct", 0):.0f}%  '
                              f'(deviation {alloc.get("deviation_pct", 0):.1f}%)',
