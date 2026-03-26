@@ -1,27 +1,66 @@
 ================================================================
         PORTFOLIO SURGEON — PERSONALISED ACTION MEMO
 ================================================================
-  Generated : 21 March 2026
+  Generated : 27 March 2026
   Funds     : 50 folios analysed
-  Value     : Rs 2,208,798
-  Score     : 75/100  (Good)
+  Value     : Rs 1,952,024
+  Score     : 31/100  (Critical — Act Now)
 ================================================================
 
 EXECUTIVE SUMMARY
 ----------------------------------------
-Rebalance to reduce overlap.
+The recommended rebalancing plan involves trimming certain funds to mitigate risks and adding new funds to capitalize on opportunities, with the goal of improving the overall portfolio health score. The plan includes reducing the portfolio weight of Motilal Oswal Nasdaq 100 FOF, DSP Equity Opportunities Fund, Nippon India Pharma Fund, and Tata Digital India Fund, while increasing the allocation to Parag Parikh Flexi Cap Fund.
 
 KEY DIAGNOSTIC FLAGS
 ----------------------------------------
   Overlap toxicity   : 100/100  [HIGH - action needed]
-  Underperformers    : 13 fund(s) below Nifty 50
+  Underperformers    : 27 fund(s) below Nifty 50
   Concentration risk : 0 fund(s) > 30% of portfolio
-  Allocation status  : Imbalanced  (actual equity 80% vs recommended 61%)
+  Allocation status  : Imbalanced  (actual equity 100% vs recommended 68%)
   Expense drag (20yr): Rs 5,000  [0 over 30 years]
 
 RECOMMENDED ACTIONS
 ----------------------------------------
-  No specific actions generated — review diagnostics above.
+ 1. [Partial Redemption]  Motilal Oswal Nasdaq 100 FOF
+    Timing : Immediate
+    Reason : Reduce portfolio weight from 20.2% to 10% to mitigate risks, as per conviction 8/10
+
+ 2. [Partial Redemption]  DSP Equity Opportunities Fund
+    Timing : Immediate
+    Reason : Reduce portfolio weight by 30% to mitigate risks, as per conviction 8/10
+
+ 3. [Partial Redemption]  Nippon India Pharma Fund
+    Timing : Immediate
+    Reason : Reduce allocation by 25% to mitigate risks, as per conviction 8/10
+
+ 4. [Partial Redemption]  Tata Digital India Fund
+    Timing : Immediate
+    Reason : Reduce allocation to 2% of the portfolio and redirect excess funds to more diversified funds, as per conviction 8/10
+
+ 5. [ADD]  Parag Parikh Flexi Cap Fund
+    Timing : Immediate
+    Reason : Increase allocation by 20% to capitalize on opportunities, as per conviction 8/10
+
+PRIORITY ORDER
+----------------------------------------
+  1. Trim Motilal Oswal Nasdaq 100 FOF
+  2. Trim DSP Equity Opportunities Fund
+  3. Trim Nippon India Pharma Fund
+  4. Trim Tata Digital India Fund
+  5. Add Parag Parikh Flexi Cap Fund
+
+SUGGESTED ADDITIONS
+----------------------------------------
+  • Large Cap Fund
+  • Mid Cap Fund
+
+TARGET ALLOCATION
+----------------------------------------
+  Large Cap              40.0%  ████████
+  Mid Cap                30.0%  ██████
+  Small Cap              15.0%  ███
+  Debt                   15.0%  ███
+
 BENCHMARK CONTEXT
 ----------------------------------------
   Nifty 50 (1yr)  : 12.0%
@@ -30,11 +69,11 @@ BENCHMARK CONTEXT
 
 FUND VERDICTS SUMMARY
 ----------------------------------------
-  [HOLD]  Motilal Oswal Nasdaq 100 FOF                   Conviction 7/10  |  XIRR 0.0%
-  [HOLD]  Aditya Birla Sun Life Digital India            Conviction 7/10  |  XIRR 0.0%
-  [HOLD]  Nippon India Banking Fund                      Conviction 7/10  |  XIRR 0.0%
-  [HOLD]  Nippon India Pharma Fund                       Conviction 7/10  |  XIRR 0.0%
-  [HOLD]  Parag Parikh Flexi Cap Fund                    Conviction 7/10  |  XIRR 0.0%
+  [TRIM]  Motilal Oswal Nasdaq 100 FOF                   Conviction 8/10  |  XIRR 68.8%
+  [TRIM]  DSP Equity Opportunities Fund                  Conviction 8/10  |  XIRR 85.4%
+  [TRIM]  Nippon India Pharma Fund                       Conviction 8/10  |  XIRR 17.9%
+  [ADD]  Parag Parikh Flexi Cap Fund                    Conviction 8/10  |  XIRR 14.3%
+  [TRIM]  Tata Digital India Fund                        Conviction 8/10  |  XIRR 14.8%
 
 ================================================================
 DISCLAIMER
