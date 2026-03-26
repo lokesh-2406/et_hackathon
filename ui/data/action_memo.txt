@@ -2,61 +2,61 @@
         PORTFOLIO SURGEON — PERSONALISED ACTION MEMO
 ================================================================
   Generated : 27 March 2026
-  Funds     : 50 folios analysed
-  Value     : Rs 1,952,024
-  Score     : 31/100  (Critical — Act Now)
+  Funds     : 8 folios analysed
+  Value     : Rs 2,683,531
+  Score     : 27/100  (Critical — Act Now)
 ================================================================
 
 EXECUTIVE SUMMARY
 ----------------------------------------
-The portfolio requires significant rebalancing to minimize overlap toxicity and optimize returns, with a focus on trimming underperforming funds and adding new allocations to diversified funds. The recommended actions aim to reduce the portfolio's expense drag and improve its overall health score.
+The portfolio requires significant rebalancing to address overlap toxicity, underperformers, and expense drag. The recommended plan involves trimming or exiting certain funds, maintaining others, and potentially adding new funds to achieve a balanced allocation.
 
 KEY DIAGNOSTIC FLAGS
 ----------------------------------------
-  Overlap toxicity   : 100/100  [HIGH - action needed]
-  Underperformers    : 27 fund(s) below Nifty 50
-  Concentration risk : 0 fund(s) > 30% of portfolio
-  Allocation status  : Imbalanced  (actual equity 100% vs recommended 68%)
+  Overlap toxicity   : 80/100  [HIGH - action needed]
+  Underperformers    : 3 fund(s) below Nifty 50
+  Concentration risk : 1 fund(s) > 30% of portfolio
+  Allocation status  : Imbalanced  (actual equity 100% vs recommended 72%)
   Expense drag (20yr): Rs 5,000  [0 over 30 years]
 
 RECOMMENDED ACTIONS
 ----------------------------------------
- 1. [Partial Redemption]  Motilal Oswal Nasdaq 100 FOF
+ 1. [Full Redemption]  ICICI Pru Bluechip Fund
     Timing : Immediate
-    Reason : Reduce portfolio weight by 5-7% to minimize overlap toxicity
+    Reason : Low conviction and expense drag
 
- 2. [Partial Redemption]  DSP Equity Opportunities Fund
+ 2. [Partial Redemption]  Parag Parikh Flexi Cap Fund
     Timing : Immediate
-    Reason : Reduce allocation by 20-25% and redirect to more diversified funds
+    Reason : Reduce allocation by 20-25% to diversify
 
- 3. [Partial Redemption]  Tata Digital India Fund
+ 3. [Partial Redemption]  Mirae Asset Large Cap Fund
     Timing : Immediate
-    Reason : Reduce existing allocation by 20% and divert proceeds to more diversified funds
+    Reason : Reduce allocation by 25% to rebalance
 
- 4. [ADD]  Parag Parikh Flexi Cap Fund
-    Timing : Immediate
-    Reason : Increase allocation to 5-6% of the portfolio
+ 4. [Partial Redemption]  Axis Midcap Fund
+    Timing : Wait 3 months for LTCG
+    Reason : Reduce portfolio weight by 30% over the next quarter
 
- 5. [No Change]  Nippon India Pharma Fund
-    Timing : Immediate
-    Reason : Maintain current SIP and portfolio allocation
+ 5. [No Change]  SBI Small Cap Fund
+    Timing : Ongoing
+    Reason : Maintain current allocation and monitor performance
 
 PRIORITY ORDER
 ----------------------------------------
-  1. Trim Motilal Oswal Nasdaq 100 FOF and DSP Equity Opportunities Fund
-  2. Add Parag Parikh Flexi Cap Fund and maintain Nippon India Pharma Fund allocation
+  1. EXIT ICICI Pru Bluechip Fund
+  2. TRIM Parag Parikh Flexi Cap Fund and Mirae Asset Large Cap Fund
 
 SUGGESTED ADDITIONS
 ----------------------------------------
-  • Diversified Equity Funds
-  • Index Funds
+  • Large Cap Index Fund
+  • Mid Cap Index Fund
 
 TARGET ALLOCATION
 ----------------------------------------
-  Large Cap              30.0%  ██████
-  Mid Cap                20.0%  ████
+  Large Cap              40.0%  ████████
+  Mid Cap                25.0%  █████
   Small Cap              15.0%  ███
-  Debt                   35.0%  ███████
+  Debt                   20.0%  ████
 
 BENCHMARK CONTEXT
 ----------------------------------------
@@ -66,11 +66,11 @@ BENCHMARK CONTEXT
 
 FUND VERDICTS SUMMARY
 ----------------------------------------
-  [TRIM]  Motilal Oswal Nasdaq 100 FOF                   Conviction 8/10  |  XIRR 68.8%
-  [TRIM]  DSP Equity Opportunities Fund                  Conviction 7/10  |  XIRR 85.4%
-  [HOLD]  Nippon India Pharma Fund                       Conviction 8/10  |  XIRR 17.9%
-  [ADD]  Parag Parikh Flexi Cap Fund                    Conviction 8/10  |  XIRR 14.3%
-  [TRIM]  Tata Digital India Fund                        Conviction 7/10  |  XIRR 14.8%
+  [TRIM]  Parag Parikh Flexi Cap Fund - Regular Plan -   Conviction 8/10  |  XIRR 19.5%
+  [TRIM]  Mirae Asset Large Cap Fund - Regular Plan - G  Conviction 7/10  |  XIRR 8.8%
+  [TRIM]  Axis Midcap Fund - Regular Plan - Growth       Conviction 8/10  |  XIRR 29.4%
+  [HOLD]  SBI Small Cap Fund - Regular Plan - Growth     Conviction 8/10  |  XIRR 13.9%
+  [EXIT]  ICICI Pru Bluechip Fund - Regular Plan - Grow  Conviction 8/10  |  XIRR -52.1%
 
 ================================================================
 DISCLAIMER
