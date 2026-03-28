@@ -19,6 +19,9 @@
 
 <br/>
 
+<!-- Take a screenshot of the running Streamlit app and save it to docs/screenshot.png -->
+![Portfolio Surgeon UI](docs/screenshot.png)
+
 ---
 
 </div>
@@ -36,6 +39,8 @@
 - [Tech Stack](#-tech-stack)
 - [Impact Model](#-impact-model)
 - [Sample Output](#-sample-output)
+- [Known Limitations](#-known-limitations)
+- [Roadmap](#️-roadmap)
 - [Team](#-team)
 
 ---
@@ -188,7 +193,7 @@ User Input
                │ • Watchlist        │
                └────────────────────┘
 
-External Services:
+External Services (all free):
   Groq API (LLaMA 3.3 70B)     — LLM inference, free tier
   mfapi.in                      — Live NAV history, free
   AMFI NAVAll.txt               — Fallback NAV source, free
@@ -266,7 +271,7 @@ No LLM calls. Pure Python. Fast and reproducible.
 **Responsibility:** Simulate an investment committee for the top 5 funds.
 
 Three sequential Groq calls per fund:
-1. **Bull prompt** — `temperature=0.3`, argumentative, references actual numbers
+1. **Bull prompt** — `temperature=0.3`, argumentative, references actual portfolio numbers
 2. **Bear prompt** — `temperature=0.3`, contrarian, references overlap and underperformance
 3. **Judge prompt** — `temperature=0.1`, deterministic JSON verdict
 
@@ -276,7 +281,7 @@ Three sequential Groq calls per fund:
     "verdict": "HOLD" | "TRIM" | "EXIT" | "ADD",
     "conviction": int,   # 1–10
     "reasoning": str,    # 2–3 sentences
-    "action": str        # Specific instruction, e.g. "Reduce SIP by 50%"
+    "action": str        # e.g. "Reduce SIP by 50%"
 }
 ```
 
@@ -294,7 +299,7 @@ Rate limit protection: `time.sleep(0.5)` between fund debates keeps well within 
 - Holdings < 365 days: **STCG** at 20%
 - Plan timing accounts for this: "Wait 3 months for LTCG treatment" vs "Immediate — LTCG already applicable"
 
-The Strategist prompt passes: health score, total portfolio value, all debate verdicts with conviction scores, overlap toxicity, underperformer count, allocation balance status, 20-year expense drag, and per-fund tax classification — all in one structured prompt. The LLM has everything it needs to give specific, grounded advice.
+The Strategist prompt passes health score, total portfolio value, all debate verdicts with conviction scores, overlap toxicity, underperformer count, allocation balance status, 20-year expense drag, and per-fund tax classification — all in one structured prompt.
 
 **Output schema:**
 ```python
@@ -312,9 +317,7 @@ The Strategist prompt passes: health score, total portfolio value, all debate ve
 ### Agent 6 — Executor
 **Responsibility:** Convert the rebalancing plan into a formatted, downloadable action memo.
 
-Generates a plain-text document structured for real-world use — an investor can hand this to their mutual fund distributor or use it directly on Coin, Groww, or MFCentral. Sections include: executive summary, diagnostic flags, numbered recommended actions with timing and SIP changes, target allocation with ASCII bar chart, benchmark context, and fund verdict summary.
-
-Saved to `data/action_memo.txt`. Served via Streamlit's `st.download_button`.
+Generates a plain-text document structured for real-world use — an investor can hand this directly to their mutual fund distributor or act on it via Coin, Groww, or MFCentral. Saved to `data/action_memo.txt` and served via Streamlit's `st.download_button`.
 
 ---
 
@@ -331,7 +334,7 @@ Saved to `data/action_memo.txt`. Served via Streamlit's `st.download_button`.
 | `ALLOCATION_IMBALANCE` | Equity/debt deviation > 10% from age-based recommendation |
 | `CONCENTRATION_RISK` | Single fund > 30% of portfolio |
 
-Deduplication logic: same `fund_name + trigger_type + date` combination is never inserted twice. Alerts survive across sessions. Supports `ACTIVE` / `RESOLVED` lifecycle.
+Deduplication logic: same `fund_name + trigger_type + date` is never inserted twice. Alerts survive across sessions. Supports `ACTIVE` / `RESOLVED` lifecycle.
 
 ---
 
@@ -339,59 +342,115 @@ Deduplication logic: same `fund_name + trigger_type + date` combination is never
 
 ### Prerequisites
 
-- Python 3.11+
-- Free [Groq API key](https://console.groq.com) (takes 2 minutes)
-- A CAMS or KFintech PDF statement — or use the built-in synthetic generator
+- Python **3.11 or higher** — check with `python --version`
+- A free **Groq API key** — 2 minutes at [console.groq.com](https://console.groq.com), no credit card needed
+- A CAMS or KFintech PDF statement — or use the built-in synthetic generator (no real data needed)
 
-### Installation
+---
+
+### Step 1 — Clone the repository
 
 ```bash
-# 1. Clone the repository
 git clone https://github.com/your-username/portfolio-surgeon.git
 cd portfolio-surgeon
-
-# 2. Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Configure API key
-cp .env.example .env
-# Edit .env and add your Groq API key:
-# GROQ_API_KEY=gsk_your_key_here
-# GROQ_MODEL=llama-3.3-70b-versatile
 ```
 
-### Run the App
+---
+
+### Step 2 — Create a virtual environment
+
+```bash
+# Mac / Linux
+python3 -m venv venv
+source venv/bin/activate
+
+# Windows
+python -m venv venv
+venv\Scripts\activate
+```
+
+You should see `(venv)` at the start of your terminal prompt.
+
+---
+
+### Step 3 — Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### Step 4 — Configure your API key
+
+```bash
+# Mac / Linux
+cp .env.example .env
+
+# Windows
+copy .env.example .env
+```
+
+Open the `.env` file and paste your Groq API key:
+
+```env
+GROQ_API_KEY=gsk_your_actual_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
+```
+
+**How to get your free Groq API key:**
+1. Go to [console.groq.com](https://console.groq.com)
+2. Sign up — free, no credit card needed
+3. Click **API Keys** → **Create API Key**
+4. Copy the key — it starts with `gsk_`
+
+---
+
+### Step 5 — Verify everything works
+
+```bash
+# Test Groq connection
+python -c "from utils.llm import chat; print(chat([{'role':'user','content':'Hello'}]))"
+
+# Test mfapi NAV fetch
+python -c "from utils.mfapi import get_nav_history; h = get_nav_history('119598'); print(h[:2])"
+```
+
+Both should return output without errors.
+
+---
+
+### Step 6 — Run the app
 
 ```bash
 streamlit run ui/app.py
-# Opens at http://localhost:8501
 ```
+
+Opens at **http://localhost:8501**
 
 Upload a PDF from the sidebar, set your age and monthly SIP, and click **Analyse Portfolio**.
 
-### Run via CLI (no UI)
+---
+
+### Alternative — Run via CLI (no UI)
 
 ```bash
-python main.py --pdf data/samples/test.pdf --age 32 --sip 15000
+python main.py --pdf data/samples/golden.pdf --age 32 --sip 15000
 ```
 
 ---
 
 ## 🎬 Demo Mode
 
-If you don't have a CAMS PDF handy, generate a fully realistic synthetic portfolio:
+No CAMS PDF? No problem. Generate a fully realistic synthetic portfolio in seconds.
 
 ### Step 1 — Generate the golden demo portfolio
 
 ```bash
-# Generate 8-fund portfolio designed to trigger every diagnostic
+# 8-fund portfolio designed to trigger every diagnostic check
 python create_test_pdf.py --output data/samples/golden.pdf --preset golden
 
-# Or a minimal 2-fund portfolio for quick testing
+# Minimal 2-fund portfolio for quick testing
 python create_test_pdf.py --output data/samples/minimal.pdf --preset minimal
 
 # Custom portfolio
@@ -405,13 +464,13 @@ python create_test_pdf.py \
 
 ### Step 2 — Pre-compute and cache the result
 
-Run this once before your live demo. If anything breaks during the presentation, load the cache instantly — zero pipeline re-run needed.
+Run this **once before your live demo**. If anything goes wrong during the presentation, load the cache instantly.
 
 ```bash
 python demo_cache.py --pdf data/samples/golden.pdf
 ```
 
-### Step 3 — Verify the cache
+### Step 3 — Verify the cache is ready
 
 ```bash
 python demo_cache.py --verify
@@ -438,7 +497,7 @@ Click **"🎬 Load Demo (cached)"** in the Streamlit sidebar. All 5 tabs populat
 
 ### Golden Portfolio — What It Triggers
 
-The synthetic golden portfolio is engineered to fire every diagnostic simultaneously. Here is exactly why each fund was chosen:
+The synthetic golden portfolio is engineered to fire every diagnostic simultaneously:
 
 | Fund | Value | Diagnostic Triggered |
 |---|---|---|
@@ -465,8 +524,10 @@ portfolio-surgeon/
 ├── state.py                   # PortfolioState TypedDict — shared state schema
 ├── create_test_pdf.py         # Synthetic CAMS PDF generator
 ├── demo_cache.py              # Demo pre-computation and cache loader
-├── requirements.txt
-├── .env                       # GROQ_API_KEY (not committed)
+├── requirements.txt           # All Python dependencies
+├── .env.example               # Environment variable template — copy to .env
+├── .env                       # Your API keys — never committed to git
+├── .gitignore                 # Excludes .env, venv, __pycache__, data/
 │
 ├── agents/
 │   ├── parser.py              # Agent 1 — PDF extraction (regex + LLM fallback)
@@ -489,11 +550,35 @@ portfolio-surgeon/
 │   ├── app.py                 # Streamlit 5-tab application
 │   └── components.py          # Reusable UI components
 │
+├── docs/
+│   └── screenshot.png         # App screenshot — take one and add it here
+│
 └── data/
     ├── samples/               # PDF inputs (golden, minimal, custom)
     ├── action_memo.txt        # Latest generated memo
     ├── golden_cache.json      # Pre-computed demo cache
     └── watchlist.db           # SQLite watchlist database
+```
+
+---
+
+### Two files to create before pushing
+
+**`.env.example`** — create this in your root folder:
+```env
+GROQ_API_KEY=gsk_your_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
+```
+
+**`.gitignore`** — make sure it contains:
+```
+venv/
+.env
+__pycache__/
+*.pyc
+data/watchlist.db
+data/golden_cache.json
+data/uploaded_*
 ```
 
 ---
@@ -504,17 +589,17 @@ portfolio-surgeon/
 |---|---|---|
 | **Orchestration** | LangGraph 0.2.28 | StateGraph with checkpoint-based fault recovery. Linear pipeline today, conditional branching ready for v2. |
 | **LLM** | Groq + LLaMA 3.3 70B | Fastest free inference available. 30 req/min on free tier — sufficient for 15 calls per analysis. |
-| **PDF Parsing** | pdfplumber + pypdf | pdfplumber handles complex table layouts; pypdf as fallback for encrypted/damaged files. |
-| **XIRR** | pyxirr | Purpose-built for irregular cashflow IRR. Handles SIP timing correctly. numpy-backed, fast. |
-| **NAV Data** | mfapi.in + AMFI | mfapi.in provides full historical NAV. AMFI NAVAll.txt provides same-day current NAV as fallback. Both free. |
+| **PDF Parsing** | pdfplumber + pypdf | pdfplumber handles complex table layouts; pypdf as fallback for encrypted files. |
+| **XIRR** | pyxirr | Purpose-built for irregular cashflow IRR. Handles SIP timing correctly. |
+| **NAV Data** | mfapi.in + AMFI | mfapi.in provides full historical NAV. AMFI NAVAll.txt is the fallback. Both free. |
 | **Data** | pandas + numpy | Fuzzy matching, normalisation, allocation breakdown computation. |
 | **UI** | Streamlit 1.39 | Rapid full-featured UI. Live agent progress, download buttons, 5-tab layout. |
-| **Charts** | Plotly 5.24 | XIRR bar charts, allocation charts, expense drag bar charts. |
+| **Charts** | Plotly 5.24 | XIRR bar charts, allocation charts, expense drag visualisation. |
 | **Database** | SQLite (built-in) | Zero-dependency persistent watchlist. Runs locally, no server needed. |
-| **PDF Generation** | reportlab 4.2.5 | Generates synthetic CAMS PDFs for demo. Also used for memo export. |
-| **HTTP** | requests + httpx | mfapi.in calls with LRU caching to prevent redundant API calls during demo. |
+| **PDF Generation** | reportlab 4.2.5 | Generates synthetic CAMS PDFs for demo. |
+| **HTTP** | requests + httpx | mfapi.in calls with LRU caching to prevent redundant API calls. |
 
-**Total API cost: ₹0.** Every external service used is either free tier or open data.
+**Total API cost: ₹0.** Every external service is either free tier or open public data.
 
 ---
 
@@ -541,17 +626,13 @@ portfolio-surgeon/
 | Output | Nothing portable | Downloadable action memo |
 | Continuity | One-time review | Persistent watchlist alerts across sessions |
 
-### The Vision
-
-Portfolio Surgeon is not a tool for people who already have wealth managers. It is financial intelligence for the 13.3 crore investors who have never had access to anyone who thinks rigorously about their money.
-
-Integrating into a platform like ET Money, Coin by Zerodha, or MFCentral would put institutional-grade portfolio analysis in the hands of every Indian with a smartphone — at zero marginal cost per analysis.
+> *"This is not a tool for HNIs. It is financial intelligence for every Indian with a demat account."*
 
 ---
 
 ## 📄 Sample Output
 
-Below is a real action memo generated by Portfolio Surgeon on the golden demo portfolio (age 32, SIP ₹15,000/month, 8 funds, portfolio value ₹26,83,531):
+Real action memo generated on the golden demo portfolio (age 32, SIP ₹15,000/month, 8 funds, total value ₹26,83,531):
 
 ```
 ================================================================
@@ -569,28 +650,25 @@ The portfolio carries extreme overlap toxicity at 80/100, with three
 large-cap funds holding near-identical positions. Parag Parikh Flexi
 Cap at 29.7% weight constitutes a concentration risk. ICICI Pru
 Bluechip Fund has delivered a negative XIRR and should be exited
-immediately. The recommended plan reduces overlap, exits the
-underperformer, and rebalances toward a 40/20/15/25 allocation.
+immediately.
 
 KEY DIAGNOSTIC FLAGS
 ----------------------------------------
   Overlap toxicity   : 80/100  [HIGH - action needed]
   Underperformers    : 3 fund(s) below Nifty 50
   Concentration risk : 1 fund(s) > 30% of portfolio
-  Allocation status  : Imbalanced (actual equity 100% vs recommended 68%)
+  Allocation status  : Imbalanced (actual 100% equity vs recommended 68%)
   Expense drag (20yr): Rs 5,000
 
 RECOMMENDED ACTIONS
 ----------------------------------------
  1. [Full Redemption]  ICICI Pru Bluechip Fund
     Timing : Immediate
-    Reason : Negative XIRR (-52.1%), conviction EXIT 8/10. Third
-             large-cap in portfolio — all overlap with HDFC Top 100.
+    Reason : Negative XIRR (-52.1%), conviction EXIT 8/10.
 
  2. [Partial Redemption]  Parag Parikh Flexi Cap Fund
     Timing : Immediate
     Reason : Reduce from 29.7% to 20% weight. Concentration risk.
-             Redirect proceeds to mid-cap index fund.
 
  3. [Reduce SIP]  Mirae Asset Large Cap Fund
     Timing : Wait 3 months for LTCG
@@ -598,51 +676,34 @@ RECOMMENDED ACTIONS
 
 FUND VERDICTS SUMMARY
 ----------------------------------------
-  [TRIM]  Parag Parikh Flexi Cap Fund       Conviction 8/10  |  XIRR 19.5%
-  [TRIM]  Mirae Asset Large Cap Fund        Conviction 8/10  |  XIRR  8.8%
-  [TRIM]  Axis Midcap Fund                  Conviction 7/10  |  XIRR 29.4%
-  [HOLD]  SBI Small Cap Fund                Conviction 8/10  |  XIRR 13.9%
-  [EXIT]  ICICI Pru Bluechip Fund           Conviction 8/10  |  XIRR -52.1%
+  [TRIM]  Parag Parikh Flexi Cap Fund    Conviction 8/10  |  XIRR 19.5%
+  [TRIM]  Mirae Asset Large Cap Fund     Conviction 8/10  |  XIRR  8.8%
+  [TRIM]  Axis Midcap Fund               Conviction 7/10  |  XIRR 29.4%
+  [HOLD]  SBI Small Cap Fund             Conviction 8/10  |  XIRR 13.9%
+  [EXIT]  ICICI Pru Bluechip Fund        Conviction 8/10  |  XIRR -52.1%
+================================================================
+DISCLAIMER: AI-generated analysis for educational purposes only.
+Consult a SEBI-registered advisor before making investment decisions.
 ================================================================
 ```
-
----
-
-## 🛠️ Configuration
-
-### Environment Variables
-
-| Variable | Required | Default | Description |
-|---|---|---|---|
-| `GROQ_API_KEY` | ✅ Yes | — | Get free at [console.groq.com](https://console.groq.com) |
-| `GROQ_MODEL` | No | `llama-3.3-70b-versatile` | LLM model identifier |
-
-### Groq Rate Limits
-
-The free Groq tier allows ~30 requests per minute for LLaMA 3.3 70B. Portfolio Surgeon makes 15 LLM calls per full analysis (3 agents × 5 funds) plus 1 strategy call and 1 parser fallback call if needed — well within limits. A `time.sleep(0.5)` between fund debates provides headroom.
-
-### Adding Your Own PDF Formats
-
-If your CAMS PDF uses a non-standard format and the regex parser returns zero folios, the LLM fallback kicks in automatically. To improve regex coverage for a specific AMC format, add the date format to `DATE_FMTS` in `utils/calculations.py` and the folio header pattern to `FOLIO_RE` in `agents/parser.py`.
 
 ---
 
 ## 🧪 Running Tests
 
 ```bash
-# Test the full pipeline end-to-end on the golden portfolio
+# Full pipeline end-to-end
 python main.py --pdf data/samples/golden.pdf --age 32 --sip 15000
 
-# Test only the parser on a specific PDF
+# Test only the parser
 python -c "
 from agents.parser import run_parser
 import json
 result = run_parser({'pdf_path': 'data/samples/golden.pdf'})
 print(f'Folios found: {len(result[\"folios\"])}')
-print(json.dumps(result[\"folios\"][0], indent=2))
 "
 
-# Test the Groq connection
+# Test Groq connection
 python -c "from utils.llm import chat; print(chat([{'role':'user','content':'Hello'}]))"
 
 # Test mfapi NAV fetch
@@ -656,24 +717,22 @@ python demo_cache.py --verify
 
 ## ⚠️ Known Limitations
 
-- **PDF format coverage:** Regex parser is tuned for standard CAMS format. KFintech and non-standard formats use LLM fallback, which adds ~5 seconds.
-- **Overlap analysis:** Current implementation uses category-based heuristics rather than live AMC factsheet holdings. Actual stock-level overlap computation requires scraping AMC websites — planned for v2.
-- **Rate limits:** On Groq free tier, analysing more than 5 funds in the Debate Club simultaneously could hit rate limits. The current `time.sleep(0.5)` guard handles this conservatively.
-- **Historical NAV depth:** mfapi.in typically provides 3–5 years of NAV history. Older SIPs may have truncated XIRR calculations.
+- **PDF format coverage:** Regex parser is tuned for standard CAMS format. KFintech and non-standard formats fall back to LLM parsing, adding ~5 seconds.
+- **Overlap analysis:** Uses category-based heuristics rather than live AMC factsheet holdings. Stock-level overlap is planned for v2.
+- **Rate limits:** Groq free tier allows ~30 requests/min. The built-in `time.sleep(0.5)` between fund debates handles this conservatively.
+- **Historical NAV depth:** mfapi.in provides 3–5 years of history. Very old SIPs may have slightly truncated XIRR calculations.
 
 ---
 
 ## 🗺️ Roadmap
 
-**Post-hackathon v2 priorities:**
-
-- [ ] Stock-level overlap using live AMC factsheets (replace heuristic category model)
+- [ ] Stock-level overlap using live AMC factsheets
 - [ ] WhatsApp / Telegram delivery of action memo
-- [ ] APScheduler-based monthly watchlist trigger re-evaluation
-- [ ] Direct plan vs regular plan switch analysis with brokerage comparison
-- [ ] Multi-investor household portfolio view (Couple's Money Planner extension)
-- [ ] Integration with MFCentral API for live portfolio sync (no PDF upload needed)
-- [ ] Parallel Debate Club execution to reduce 45-second runtime to ~20 seconds
+- [ ] Monthly watchlist re-evaluation via APScheduler
+- [ ] Direct plan vs regular plan switch analysis
+- [ ] Multi-investor household portfolio view
+- [ ] MFCentral API integration — no PDF upload needed
+- [ ] Parallel Debate Club execution to cut runtime from 45s to ~20s
 
 ---
 
@@ -700,7 +759,7 @@ MIT License — see [LICENSE](LICENSE) for details.
 - [AMFI India](https://amfiindia.com) — NAVAll.txt public data feed
 - [Groq](https://console.groq.com) — Free LLM inference at production speed
 - [LangGraph](https://github.com/langchain-ai/langgraph) — Agent orchestration framework
-- [pyxirr](https://github.com/Anexen/pyxirr) — The only Python XIRR library that actually works correctly
+- [pyxirr](https://github.com/Anexen/pyxirr) — The only Python XIRR library that works correctly for SIP cashflows
 
 ---
 
