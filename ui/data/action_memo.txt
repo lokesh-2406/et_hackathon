@@ -1,45 +1,45 @@
 ================================================================
         PORTFOLIO SURGEON — PERSONALISED ACTION MEMO
 ================================================================
-  Generated : 27 March 2026
+  Generated : 29 March 2026
   Funds     : 8 folios analysed
-  Value     : Rs 2,683,531
-  Score     : 27/100  (Critical — Act Now)
+  Value     : Rs 2,635,656
+  Score     : 33/100  (Critical — Act Now)
 ================================================================
 
 EXECUTIVE SUMMARY
 ----------------------------------------
-The portfolio requires significant rebalancing to address overlap toxicity, underperformers, and expense drag. The recommended plan involves trimming or exiting certain funds, maintaining others, and potentially adding new funds to achieve a balanced allocation.
+The recommended changes aim to reduce overlap toxicity and underperformers, while maintaining a balanced allocation and minimizing tax implications. The plan involves trimming or exiting certain funds, stopping SIPs, and potentially adding new funds to achieve the target allocation.
 
 KEY DIAGNOSTIC FLAGS
 ----------------------------------------
-  Overlap toxicity   : 80/100  [HIGH - action needed]
+  Overlap toxicity   : 60/100  [HIGH - action needed]
   Underperformers    : 3 fund(s) below Nifty 50
   Concentration risk : 1 fund(s) > 30% of portfolio
-  Allocation status  : Imbalanced  (actual equity 100% vs recommended 72%)
-  Expense drag (20yr): Rs 5,000  [0 over 30 years]
+  Allocation status  : Imbalanced  (actual equity 100% vs recommended 73%)
+  Expense drag (20yr): Rs 2,948,064  [13,317,380 over 30 years]
 
 RECOMMENDED ACTIONS
 ----------------------------------------
- 1. [Full Redemption]  ICICI Pru Bluechip Fund
+ 1. [Partial Redemption]  Parag Parikh Flexi Cap Fund
     Timing : Immediate
-    Reason : Low conviction and expense drag
+    Reason : Reduce portfolio weight by 20% due to TRIM verdict with conviction 8/10
 
- 2. [Partial Redemption]  Parag Parikh Flexi Cap Fund
+ 2. [Partial Redemption]  Mirae Asset Large Cap Fund
     Timing : Immediate
-    Reason : Reduce allocation by 20-25% to diversify
+    Reason : Reduce portfolio weight by 5-7% to minimize overlap toxicity
 
- 3. [Partial Redemption]  Mirae Asset Large Cap Fund
+ 3. [Partial Redemption]  Axis Midcap Fund
+    Timing : Wait 6 months for LTCG
+    Reason : Reduce portfolio weight by 30% to 10.2% over the next 6 months
+
+ 4. [Full Redemption]  ICICI Pru Bluechip Fund
     Timing : Immediate
-    Reason : Reduce allocation by 25% to rebalance
-
- 4. [Partial Redemption]  Axis Midcap Fund
-    Timing : Wait 3 months for LTCG
-    Reason : Reduce portfolio weight by 30% over the next quarter
+    Reason : Immediately redeem the entire 2.2% allocation due to EXIT verdict with conviction 8/10
 
  5. [No Change]  SBI Small Cap Fund
     Timing : Ongoing
-    Reason : Maintain current allocation and monitor performance
+    Reason : Maintain the current 6.1% portfolio weight and continue regular SIP investments
 
 PRIORITY ORDER
 ----------------------------------------
@@ -49,7 +49,7 @@ PRIORITY ORDER
 SUGGESTED ADDITIONS
 ----------------------------------------
   • Large Cap Index Fund
-  • Mid Cap Index Fund
+  • Liquid Fund
 
 TARGET ALLOCATION
 ----------------------------------------
@@ -66,11 +66,11 @@ BENCHMARK CONTEXT
 
 FUND VERDICTS SUMMARY
 ----------------------------------------
-  [TRIM]  Parag Parikh Flexi Cap Fund - Regular Plan -   Conviction 8/10  |  XIRR 19.5%
-  [TRIM]  Mirae Asset Large Cap Fund - Regular Plan - G  Conviction 7/10  |  XIRR 8.8%
-  [TRIM]  Axis Midcap Fund - Regular Plan - Growth       Conviction 8/10  |  XIRR 29.4%
-  [HOLD]  SBI Small Cap Fund - Regular Plan - Growth     Conviction 8/10  |  XIRR 13.9%
-  [EXIT]  ICICI Pru Bluechip Fund - Regular Plan - Grow  Conviction 8/10  |  XIRR -52.1%
+  [TRIM]  Parag Parikh Flexi Cap Fund - Regular Plan -   Conviction 8/10  |  XIRR 18.8%
+  [TRIM]  Mirae Asset Large Cap Fund - Regular Plan - G  Conviction 8/10  |  XIRR 7.6%
+  [TRIM]  Axis Midcap Fund - Regular Plan - Growth       Conviction 8/10  |  XIRR 28.1%
+  [HOLD]  SBI Small Cap Fund - Regular Plan - Growth     Conviction 8/10  |  XIRR 12.9%
+  [EXIT]  ICICI Pru Bluechip Fund - Regular Plan - Grow  Conviction 8/10  |  XIRR -52.8%
 
 ================================================================
 DISCLAIMER
