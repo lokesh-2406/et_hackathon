@@ -82,13 +82,15 @@ def run_pipeline(pdf_path: str, user_age: int, monthly_sip: float) -> dict:
 
 # ── Session state management ────────────────────────────────────────────────
 
-if run_btn and uploaded:
+if run_btn and uploaded and not st.session_state.get('_running'):
+    st.session_state['_running'] = True
     os.makedirs('data', exist_ok=True)
     pdf_path = f'data/uploaded_{uploaded.name}'
     with open(pdf_path, 'wb') as f:
         f.write(uploaded.read())
     st.session_state['result'] = run_pipeline(pdf_path, age, monthly)
     st.session_state['source'] = 'live'
+    st.session_state['_running'] = False
 
 elif demo_btn:
     if os.path.exists('data/golden_cache.json'):
