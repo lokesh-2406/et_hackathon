@@ -33,7 +33,7 @@
 - [The Debate Club — Our Differentiator](#️-the-debate-club--our-differentiator)
 - [System Architecture](#️-system-architecture)
 - [Agent Pipeline](#-agent-pipeline-deep-dive)
-- [Quick Start to Capitalize](#-quick-start)
+- [QUICK START](#-quick-start)
 - [Demo Mode](#-demo-mode)
 - [Project Structure](#-project-structure)
 - [Tech Stack](#-tech-stack)
