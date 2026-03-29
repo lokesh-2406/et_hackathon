@@ -6,7 +6,7 @@ from itertools import combinations
 
 # Simplified Heuristic for logic
 CATEGORY_KEYWORDS = {
-    'large cap': ['large cap', 'bluechip', 'nifty 50', 'index'],
+    'large cap': ['large cap', 'bluechip', 'nifty 50', 'index', 'top 100'],
     'mid cap': ['mid cap', 'mid-cap'],
     'small cap': ['small cap'],
     'flexi cap': ['flexi', 'multi', 'parag parikh'],
@@ -21,6 +21,11 @@ def _get_category(scheme_name: str) -> str:
     return 'flexi cap'
 
 def check_overlap(folios: list) -> dict:
+    """
+    Detect overlapping fund pairs using category-based heuristics.
+    Large-cap funds share ~65% holdings; flexi-cap funds share ~45%.
+    Toxicity = min(n_overlapping_pairs * 20, 100).
+    """
     LARGE_CAP_KEYWORDS = ['large cap','bluechip','top 100','nifty','index','large & mid']
     pairs = []
     for i, f1 in enumerate(folios):
@@ -35,11 +40,28 @@ def check_overlap(folios: list) -> dict:
     toxicity = min(len(pairs) * 20, 100)
     return {'pairs': pairs, 'toxicity_score': toxicity}
 
-def check_benchmark(folios: list[dict], benchmark: dict) -> list[dict]:
+def check_benchmark(folios: list, benchmark: dict) -> list:
+    """
+    Flag funds whose XIRR is below the Nifty 50 1-year return.
+    Returns list with keys: scheme, fund_xirr, nifty_return, underperformance
+    (monitor.py needs nifty_return and underperformance).
+    """
     nifty_1y = benchmark.get('1y', 0.12)
-    return [{'scheme': f['scheme_name'], 'fund_xirr': f['xirr']*100} for f in folios if f.get('xirr') and f['xirr'] < nifty_1y]
+    result = []
+    for f in folios:
+        if f.get('xirr') is None:
+            continue
+        fund_xirr_pct = f['xirr'] * 100
+        nifty_pct = nifty_1y * 100
+        if f['xirr'] < nifty_1y:
+            result.append({
+                'scheme':           f['scheme_name'],
+                'fund_xirr':        round(fund_xirr_pct, 1),
+                'nifty_return':     round(nifty_pct, 1),
+                'underperformance': round(nifty_pct - fund_xirr_pct, 1),
+            })
+    return result
 
-# agents/diagnostician.py — replace check_allocation
 def check_allocation(folios: list, user_age: int = 35) -> dict:
     total = sum(f.get('current_value', 0) for f in folios)
     if total == 0:

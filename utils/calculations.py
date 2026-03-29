@@ -18,7 +18,7 @@ def compute_xirr(txns: list, current_val: float) -> float | None:
     Args:
         txns:        List of transaction dicts with 'date' and 'amount' keys.
         current_val: Current market value of the holding (terminal inflow).
- 
+
     Returns:
         XIRR as a decimal (e.g. 0.14 for 14%), or None if computation fails.
         Result is clamped to [_XIRR_MIN, _XIRR_MAX] to filter bad data.
