@@ -20,10 +20,20 @@ def _get_category(scheme_name: str) -> str:
         if any(kw in name for kw in keywords): return cat
     return 'flexi cap'
 
-def check_overlap(folios: list[dict]) -> dict:
-    # Simplified overlap logic based on category matching
-    toxicity = min(len(folios) * 10, 100) # Placeholder logic
-    return {'pairs': [], 'toxicity_score': toxicity}
+def check_overlap(folios: list) -> dict:
+    LARGE_CAP_KEYWORDS = ['large cap','bluechip','top 100','nifty','index','large & mid']
+    pairs = []
+    for i, f1 in enumerate(folios):
+        for f2 in folios[i+1:]:
+            n1, n2 = f1['scheme_name'].lower(), f2['scheme_name'].lower()
+            both_large = any(k in n1 for k in LARGE_CAP_KEYWORDS) and any(k in n2 for k in LARGE_CAP_KEYWORDS)
+            both_flexi = ('flexi' in n1 or 'multi' in n1) and ('flexi' in n2 or 'multi' in n2)
+            if both_large:
+                pairs.append({'fund1': f1['scheme_name'], 'fund2': f2['scheme_name'], 'overlap_pct': 65})
+            elif both_flexi:
+                pairs.append({'fund1': f1['scheme_name'], 'fund2': f2['scheme_name'], 'overlap_pct': 45})
+    toxicity = min(len(pairs) * 20, 100)
+    return {'pairs': pairs, 'toxicity_score': toxicity}
 
 def check_benchmark(folios: list[dict], benchmark: dict) -> list[dict]:
     nifty_1y = benchmark.get('1y', 0.12)
