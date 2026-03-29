@@ -94,6 +94,20 @@ def check_concentration(folios: list) -> list:
         if f.get('current_value', 0) / total > 0.30
     ]
 
+def _compute_portfolio_drag(folios: list) -> dict:
+    from utils.calculations import compute_expense_drag
+    total_10, total_20, total_30 = 0, 0, 0
+    for f in folios:
+        ter = f.get('real_ter', 0.015)
+        val = f.get('current_value', 0)
+        drag = compute_expense_drag(ter, val)
+        total_10 += drag.get(10, 0)
+        total_20 += drag.get(20, 0)
+        total_30 += drag.get(30, 0)
+    return {'total_drag_10yr_inr': round(total_10), 
+            'total_drag_20yr_inr': round(total_20),
+            'total_drag_30yr_inr': round(total_30)}
+
 def run_diagnostician(state: dict) -> dict:
     folios = state.get('folios', [])
     diag = {
@@ -101,7 +115,7 @@ def run_diagnostician(state: dict) -> dict:
         'underperformers': check_benchmark(folios, state.get('benchmark_returns', {})),
         'allocation': check_allocation(folios, state.get('user_age', 35)),
         'concentration': check_concentration(folios),
-        'expense_drag': {'total_drag_20yr_inr': 5000}
+        'expense_drag': _compute_portfolio_drag(folios)
     }
     score = compute_health_score(
         diag['overlap'], diag['underperformers'],
