@@ -141,18 +141,18 @@ The Judge runs at `temperature=0.1` — deterministic, not creative. Bull and Be
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                         PORTFOLIO SURGEON                                │
-│                    LangGraph Orchestrated Pipeline                        │
+│                         PORTFOLIO SURGEON                               │
+│                    LangGraph Orchestrated Pipeline                      │
 └─────────────────────────────────────────────────────────────────────────┘
 
 User Input
   │  CAMS/KFintech PDF
   │  Age + Monthly SIP
   ▼
-┌──────────┐    ┌──────────┐    ┌───────────────┐    ┌─────────────┐
+┌──────────┐    ┌──────────┐    ┌───────────────┐      ┌─────────────┐
 │  Parser  │───▶│ Enricher │───▶│ Diagnostician │───▶│ Debate Club │
-│ Agent 1  │    │ Agent 2  │    │   Agent 3     │    │  Agent 4    │
-└──────────┘    └──────────┘    └───────────────┘    └─────────────┘
+│ Agent 1  │    │ Agent 2  │    │   Agent 3     │      │  Agent 4    │
+└──────────┘    └──────────┘    └───────────────┘      └─────────────┘
      │               │                 │                     │
   pdfplumber      mfapi.in         6 checks              Groq API
   regex + LLM     pyxirr           health score          Bull+Bear+Judge
@@ -435,7 +435,7 @@ Upload a PDF from the sidebar, set your age and monthly SIP, and click **Analyse
 ### Alternative — Run via CLI (no UI)
 
 ```bash
-python main.py --pdf data/samples/golden.pdf --age 32 --sip 15000
+python main.py --pdf data/samples/test.pdf --age 32 --sip 15000
 ```
 
 ---
@@ -454,12 +454,7 @@ python create_test_pdf.py --output data/samples/golden.pdf --preset golden
 python create_test_pdf.py --output data/samples/minimal.pdf --preset minimal
 
 # Custom portfolio
-python create_test_pdf.py \
-  --output data/samples/custom.pdf \
-  --name "Rahul Sharma" \
-  --pan ABCDE1234F \
-  --age 45 \
-  --sip 25000
+python create_test_pdf.py  --output data/samples/custom.pdf  --name "Rahul Sharma"  --pan ABCDE1234F   --age 45  --sip 25000
 ```
 
 ### Step 2 — Pre-compute and cache the result
@@ -467,7 +462,7 @@ python create_test_pdf.py \
 Run this **once before your live demo**. If anything goes wrong during the presentation, load the cache instantly.
 
 ```bash
-python demo_cache.py --pdf data/samples/golden.pdf
+python demo_cache.py --pdf data/samples/test.pdf
 ```
 
 ### Step 3 — Verify the cache is ready
@@ -762,7 +757,6 @@ python demo_cache.py --verify
 ## ⚠️ Known Limitations
 
 - **PDF format coverage:** Regex parser is tuned for standard CAMS format. KFintech and non-standard formats fall back to LLM parsing, adding ~5 seconds.
-- **Overlap analysis:** Uses category-based heuristics rather than live AMC factsheet holdings. Stock-level overlap is planned for v2.
 - **Rate limits:** Groq free tier allows ~30 requests/min. The built-in `time.sleep(0.5)` between fund debates handles this conservatively.
 - **Historical NAV depth:** mfapi.in provides 3–5 years of history. Very old SIPs may have slightly truncated XIRR calculations.
 
@@ -770,7 +764,6 @@ python demo_cache.py --verify
 
 ## 🗺️ Roadmap
 
-- [ ] Stock-level overlap using live AMC factsheets
 - [ ] WhatsApp / Telegram delivery of action memo
 - [ ] Monthly watchlist re-evaluation via APScheduler
 - [ ] Direct plan vs regular plan switch analysis
@@ -811,6 +804,5 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 **Portfolio Surgeon · ET AI Hackathon 2026**
 
-*Built in 72 hours. ₹0 in API costs. For 13.3 crore underserved investors.*
 
 </div>
