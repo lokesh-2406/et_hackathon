@@ -351,7 +351,7 @@ Deduplication logic: same `fund_name + trigger_type + date` is never inserted tw
 ### Step 1 — Clone the repository
 
 ```bash
-git clone https://github.com/your-username/portfolio-surgeon.git
+git clone https://github.com/devanshi442/portfolio-surgeon.git
 cd portfolio-surgeon
 ```
 
