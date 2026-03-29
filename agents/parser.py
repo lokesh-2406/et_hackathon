@@ -91,7 +91,10 @@ def parse_regex(text: str) -> list[dict]:
     return folios
 
 def parse_llm_fallback(text: str) -> list[dict]:
+    import re
     snippet = text[:4000]
+    snippet = re.sub(r'[A-Z]{5}[0-9]{4}[A-Z]', '[PAN REDACTED]', snippet)
+    snippet = re.sub(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b', '[EMAIL REDACTED]', snippet, flags=re.IGNORECASE)
     prompt = f'''
         You are a financial data extractor. Extract ALL mutual fund folio data from
         this CAMS/KFintech statement text. Return ONLY valid JSON, no markdown.
