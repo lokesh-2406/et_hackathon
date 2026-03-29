@@ -605,39 +605,59 @@ data/uploaded_*
 
 ## 📊 Impact Model
 
-Target market: 14 crore demat accounts in India (SEBI 2024). We subtract the ~70 lakh HNI accounts that can already afford a SEBI advisor → 13.3 crore underserved retail investors as our addressable market.
+**Target market:** 14 crore demat accounts in India (SEBI 2024). We subtract the ~70 lakh HNI accounts that can already afford a SEBI advisor → **13.3 crore underserved retail investors** as our addressable market.
 
-Time saved per analysis
+---
 
-Manual research to analyse a mutual fund portfolio (checking XIRR, benchmark comparison, overlap, rebalancing): estimated 5+ hours based on the steps involved — pulling NAV history, computing returns in Excel, cross-checking fund holdings for overlap, reading scheme documents
-Portfolio Surgeon completes the same in 45 seconds
-Assuming an investor does this once per quarter → ~20 hours/year saved
-We conservatively report 4.9 hours saved per analysis (accounting for partial tasks users may skip anyway)
+### ⏱️ Time saved per analysis
 
+- Manual portfolio analysis (XIRR, benchmark, overlap, rebalancing): estimated **5+ hours**
+- Portfolio Surgeon completes the same in **45 seconds**
+- Assuming an investor does this **once per quarter** → ~20 hours/year saved
+- We conservatively report **4.9 hours saved per analysis** (accounting for partial tasks users may skip)
 
-Cost saved per user — ₹1,470
-AssumptionValueOpportunity cost of 1 hour of an investor's time₹300/hr (conservative for a working professional)Hours saved per analysis4.9 hrsCost saved4.9 × ₹300 = ₹1,470 per analysis
+---
 
-Revenue recovered — ₹7,500/year
+### 💰 Cost saved per user — ₹1,470
 
-A typical underperforming fund trails its benchmark by 3–5% XIRR annually
-On an average portfolio value of ₹3–5 lakh (retail investor median), a 3% drag = ₹9,000–₹15,000/year in missed returns
-We conservatively estimate Portfolio Surgeon helps recover 50% of that drag through timely rebalancing → ₹5,000–₹7,500/year recovered
-We report the lower bound: ₹7,500/year
+| Assumption | Value |
+|---|---|
+| Opportunity cost of 1 hour of an investor's time | ₹300/hr (conservative for a working professional) |
+| Hours saved per analysis | 4.9 hrs |
+| **Cost saved** | **4.9 × ₹300 = ₹1,470 per analysis** |
 
+---
 
-Advisory cost avoided — ₹25,000/year
+### 📈 Revenue recovered — ₹7,500/year
 
-SEBI-registered investment adviser annual fee: ₹25,000–₹50,000/year (industry standard for HNI-tier service)
-Portfolio Surgeon delivers equivalent analytical output at ₹0 cost
-We report the floor: ₹25,000/year avoided
+- A typical underperforming fund trails its benchmark by **3–5% XIRR** annually
+- On an average portfolio of **₹3–5 lakh** (retail investor median), a 3% drag = ₹9,000–₹15,000/year in missed returns
+- Portfolio Surgeon helps recover an estimated **50% of that drag** through timely rebalancing → ₹5,000–₹7,500/year
+- We report the lower bound: **₹7,500/year**
 
+---
 
-Scale estimate — ₹10,500 crore at 1% adoption
-InputValueAddressable market13.3 crore investors1% adoption13.3 lakh usersValue per user per year (time + recovery + advisory)₹1,470 + ₹7,500 + ₹25,000 = ~₹34,000Total value unlocked13.3L × ₹34,000 ≈ ₹45,000 croreConservative cut (reporting ~23% of total)₹10,500 crore
-We deliberately report the conservative number (₹10,500 crore) rather than the full ₹45,000 crore to reflect adoption friction, partial usage, and the fact that not every user captures every benefit category.
+### 🏦 Advisory cost avoided — ₹25,000/year
 
-Disclaimer: All figures are estimates for illustrative purposes. Actual impact depends on portfolio size, usage frequency, and market conditions. Portfolio Surgeon is a decision-support tool, not a SEBI-registered investment adviser.
+- SEBI-registered investment adviser fee: **₹25,000–₹50,000/year**
+- Portfolio Surgeon delivers equivalent analytical output at **₹0 cost**
+- We report the floor: **₹25,000/year avoided**
+
+---
+
+### 🚀 Scale estimate — ₹10,500 crore at 1% adoption
+
+| Input | Value |
+|---|---|
+| Addressable market | 13.3 crore investors |
+| 1% adoption | 13.3 lakh users |
+| Value per user per year (time + recovery + advisory) | ₹1,470 + ₹7,500 + ₹25,000 = ~₹34,000 |
+| **Total value unlocked** | **13.3L × ₹34,000 ≈ ₹45,000 crore** |
+| Conservative cut (reporting ~23% of total) | **₹10,500 crore** |
+
+We deliberately report **₹10,500 crore** rather than the full ₹45,000 crore to reflect adoption friction, partial usage, and the fact that not every user captures every benefit category.
+
+> ⚠️ **Disclaimer:** All figures are estimates for illustrative purposes. Actual impact depends on portfolio size, usage frequency, and market conditions. Portfolio Surgeon is a decision-support tool, not a SEBI-registered investment adviser.
 
 ### What Portfolio Surgeon Changes
 
