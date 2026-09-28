@@ -1,0 +1,11 @@
+fund_key,isin,stock,weight,sector
+hdfc_flexi,INE040A01034,HDFC Bank Ltd.,8.5,Financial Services
+hdfc_flexi,INE090A01021,ICICI Bank Ltd.,7.2,Financial Services
+hdfc_flexi,INE002A01018,Reliance Industries Ltd.,6.5,Oil & Gas
+hdfc_flexi,INE467B01029,Tata Consultancy Services Ltd.,4.2,IT
+hdfc_flexi,INE062A01020,State Bank of India,4.0,Financial Services
+parag_parikh_flexi,INE040A01034,HDFC Bank Ltd.,7.5,Financial Services
+parag_parikh_flexi,INE238A01034,Axis Bank Ltd.,5.2,Financial Services
+parag_parikh_flexi,INE002A01018,Reliance Industries Ltd.,6.0,Oil & Gas
+parag_parikh_flexi,US02079K3059,Alphabet Inc,5.0,IT
+parag_parikh_flexi,US5949181045,Microsoft Corp,4.5,IT
