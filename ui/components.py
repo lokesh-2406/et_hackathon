@@ -32,6 +32,7 @@ def render_watchlist(watchlist: list) -> None:
         st.info(f"{w['trigger_type']}: {w['fund_name']} | {w['current_value']}")
 
 def render_holdings_table(folios: list) -> None:
+<<<<<<< Updated upstream
     df = pd.DataFrame([{'Fund': f['scheme_name'], 'Value': f.get('current_value'), 'XIRR': f.get('xirr')} for f in folios])
     st.dataframe(df)
 
@@ -40,3 +41,20 @@ def verdict_badge(verdict: str) -> str:
 
 def render_expense_drag(folios: list, d10: float, d20: float, d30: float) -> None:
     st.bar_chart({'10yr': d10, '20yr': d20, '30yr': d30})
+=======
+    """Render a sortable holdings table."""
+    if not folios:
+        return
+    rows = []
+    for f in folios:
+        rows.append({
+            'Fund':          f.get('scheme_name', ''),
+            'Value (Rs)':    f.get('current_value', 0),
+            'XIRR %':        round(f['xirr'] * 100, 1) if f.get('xirr') is not None else 'Insufficient history',
+            'Units':         f.get('total_units', 0),
+            'NAV':           f.get('current_nav', 0),
+            'TER %':         round(f.get('real_ter', 0.015) * 100, 2),
+        })
+    df = pd.DataFrame(rows).sort_values('Value (Rs)', ascending=False)
+    st.dataframe(df, use_container_width=True, hide_index=True)
+>>>>>>> Stashed changes

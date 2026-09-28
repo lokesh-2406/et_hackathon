@@ -1,10 +1,17 @@
 ================================================================
         PORTFOLIO SURGEON — PERSONALISED ACTION MEMO
 ================================================================
+<<<<<<< Updated upstream
   Generated : 27 March 2026
   Funds     : 50 folios analysed
   Value     : Rs 2,215,800
   Score     : 75/100  (Good)
+=======
+  Generated : 29 March 2026
+  Funds     : 8 folios analysed
+  Value     : Rs 3,180,809
+  Score     : 33/100  (Critical — Review Flags)
+>>>>>>> Stashed changes
 ================================================================
 
 EXECUTIVE SUMMARY
@@ -13,11 +20,19 @@ Rebalance to reduce overlap.
 
 KEY DIAGNOSTIC FLAGS
 ----------------------------------------
+<<<<<<< Updated upstream
   Overlap toxicity   : 100/100  [HIGH - action needed]
   Underperformers    : 13 fund(s) below Nifty 50
   Concentration risk : 0 fund(s) > 30% of portfolio
   Allocation status  : Imbalanced  (actual equity 80% vs recommended 56%)
   Expense drag (20yr): Rs 5,000  [0 over 30 years]
+=======
+  Overlap toxicity   : 60/100  [HIGH - action needed]
+  Underperformers    : 6 fund(s) below Nifty 50
+  Concentration risk : 1 fund(s) > 25% of portfolio
+  Allocation status  : Imbalanced  (actual equity 100% vs recommended 60%)
+  Expense drag (20yr): Rs 3,883,616  [Rs 17,469,872 over 30 years]
+>>>>>>> Stashed changes
 
 RECOMMENDED ACTIONS
 ----------------------------------------

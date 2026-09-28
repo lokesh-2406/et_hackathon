@@ -33,7 +33,54 @@ def check_allocation(folios: list[dict], user_age: int = 35) -> dict:
     total = sum(f.get('current_value', 0) for f in folios)
     actual_equity = 0.8 # Placeholder
     recommended_equity = (100 - user_age) / 100
+<<<<<<< Updated upstream
     return {'actual_equity_pct': actual_equity*100, 'recommended_equity_pct': recommended_equity*100, 'is_balanced': abs(actual_equity - recommended_equity) < 0.1}
+=======
+    actual_equity = 1 - breakdown['debt'] - breakdown['hybrid'] * 0.4
+    deviation = abs(actual_equity - recommended_equity) * 100
+
+    return {
+        'breakdown': {k: round(v * 100, 1) for k, v in breakdown.items()},
+        'recommended_equity_pct': round(recommended_equity * 100, 1),
+        'actual_equity_pct': round(actual_equity * 100, 1),
+        'deviation_pct': round(deviation, 1),
+        'is_balanced': deviation < 10,
+    }
+# added to compute a simple health score based on diagnostics, with caps to prevent any single factor from dominating the score
+def compute_health_score(overlap: dict, underperf: list, alloc: dict, conc: list) -> float:
+    score = 100.0
+    score -= min(overlap.get('toxicity_score', 0) * 0.3, 30)  # max 30 pts
+    score -= min(len(underperf) * 8, 24)                        # max 24 pts
+    if not alloc.get('is_balanced', True):
+        score -= 15
+    score -= min(len(conc) * 10, 20)                            # max 20 pts
+    return max(round(score, 1), 0)
+
+def check_concentration(folios: list, threshold: float = 0.25) -> list:
+    total = sum(f.get('current_value', 0) for f in folios)
+    if total == 0:
+        return []
+    return [
+        {'scheme': f['scheme_name'], 'pct': round(f.get('current_value', 0) / total * 100, 1),
+         'current_value': f.get('current_value', 0)}
+        for f in folios
+        if f.get('current_value', 0) / total > threshold
+    ]
+
+def _compute_portfolio_drag(folios: list) -> dict:
+    from utils.calculations import compute_expense_drag
+    total_10, total_20, total_30 = 0, 0, 0
+    for f in folios:
+        ter = f.get('real_ter', 0.015)
+        val = f.get('current_value', 0)
+        drag = compute_expense_drag(ter, val)
+        total_10 += drag.get(10, 0)
+        total_20 += drag.get(20, 0)
+        total_30 += drag.get(30, 0)
+    return {'total_drag_10yr_inr': round(total_10), 
+            'total_drag_20yr_inr': round(total_20),
+            'total_drag_30yr_inr': round(total_30)}
+>>>>>>> Stashed changes
 
 def run_diagnostician(state: dict) -> dict:
     folios = state.get('folios', [])

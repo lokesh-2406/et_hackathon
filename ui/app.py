@@ -101,6 +101,7 @@ memo = r.get('action_memo', '')
 bench = r.get('benchmark_returns', {})
 watchlist_data = r.get('watchlist', [])
 
+<<<<<<< Updated upstream
 total_val = sum(f.get('current_value', 0) for f in folios)
 xirr_list = [f['xirr'] * 100 for f in folios if f.get('xirr') is not None]
 avg_xirr = sum(xirr_list) / len(xirr_list) if xirr_list else 0.0
@@ -111,6 +112,25 @@ col2.metric('Avg XIRR', f'{avg_xirr:.1f}%')
 col3.metric('Health Score', f'{score:.0f}/100')
 col4.metric('Funds', str(len(folios)))
 col5.metric('Return', "Analysis Ready")
+=======
+total_val  = sum(f.get('current_value', 0) for f in folios)
+xirr_list  = [f['xirr'] * 100 for f in folios if f.get('xirr') is not None]
+nifty_1y   = bench.get('1y', 0.12) * 100
+
+# ── Top-level metrics ────────────────────────────────────────────────────────
+
+col1, col2, col3, col4, col5 = st.columns(5)
+col1.metric('Portfolio Value',  f'Rs {total_val:,.0f}')
+if xirr_list:
+    avg_xirr = sum(xirr_list) / len(xirr_list)
+    col2.metric('Avg XIRR', f'{avg_xirr:.1f}%',
+                delta=f'{avg_xirr - nifty_1y:+.1f}% vs Nifty')
+else:
+    col2.metric('Avg XIRR', 'Insufficient history')
+col3.metric('Health Score',     f'{score:.0f}/100')
+col4.metric('Funds',            str(len(folios)))
+col5.metric('Nifty 50 (1yr)',   f'{nifty_1y:.1f}%')
+>>>>>>> Stashed changes
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs(['🔍 Diagnostics', '🗣️ Debate Club', '📋 Rebalancing Plan', '📝 Action Memo', '🔔 Watchlist'])
 
@@ -126,12 +146,44 @@ with tab1:
     render_overlap_pairs(diag.get('overlap', {}).get('pairs', []))
 
 with tab2:
+<<<<<<< Updated upstream
     for v in verdicts:
         with st.expander(f"{v.get('verdict', 'HOLD')} — {v['fund'][:55]}", expanded=False):
             st.write(f"Bull: {v.get('bull')}")
             st.write(f"Bear: {v.get('bear')}")
             st.write(f"Judge: {v.get('reasoning')}")
 
+=======
+    if not verdicts:
+        st.info('No debate results yet. Run analysis first.')
+    else:
+        st.caption(f'Investment committee debate on top {len(verdicts)} funds by portfolio weight.')
+        for v in verdicts:
+            verdict_str = v.get('verdict', 'HOLD')
+            conviction  = v.get('conviction', 0)
+            xirr_val    = v.get('xirr')
+            css_class   = f'verdict-{verdict_str.lower()}'
+            xirr_disp   = f"{xirr_val:.1f}%" if xirr_val is not None else "Insufficient history"
+
+            header = f"{v['fund'][:55]}  |  XIRR {xirr_disp}  |  Conviction {conviction}/10"
+            with st.expander(header, expanded=False):
+                vcol1, vcol2, vcol3 = st.columns(3)
+                vcol1.markdown(f'<span class="{css_class}">{verdict_str}</span>',
+                               unsafe_allow_html=True)
+                vcol2.metric('Conviction', f'{conviction}/10')
+                vcol3.metric('XIRR', xirr_disp,
+                             delta=f'{xirr_val - bench.get("1y", 0.12)*100:+.1f}% vs Nifty' if xirr_val is not None else None)
+
+                st.markdown('**🐂 Bull Case**')
+                st.info(v.get('bull', 'N/A'))
+                st.markdown('**🐻 Bear Case**')
+                st.warning(v.get('bear', 'N/A'))
+                st.markdown('**⚖️ Judge Verdict**')
+                st.success(v.get('reasoning', 'N/A'))
+                st.markdown(f'**Recommended action:** {v.get("action", "N/A")}')
+
+# ── Tab 3: Rebalancing Plan ──────────────────────────────────────────────────
+>>>>>>> Stashed changes
 with tab3:
     st.write(plan.get('summary', ''))
     for action in plan.get('actions', []):

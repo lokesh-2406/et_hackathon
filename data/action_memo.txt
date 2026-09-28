@@ -3,8 +3,13 @@
 ================================================================
   Generated : 21 March 2026
   Funds     : 50 folios analysed
+<<<<<<< Updated upstream
   Value     : Rs 2,208,798
   Score     : 75/100  (Good)
+=======
+  Value     : Rs 3,363,414
+  Score     : 21/100  (Critical — Review Flags)
+>>>>>>> Stashed changes
 ================================================================
 
 EXECUTIVE SUMMARY
@@ -14,10 +19,17 @@ Rebalance to reduce overlap.
 KEY DIAGNOSTIC FLAGS
 ----------------------------------------
   Overlap toxicity   : 100/100  [HIGH - action needed]
+<<<<<<< Updated upstream
   Underperformers    : 13 fund(s) below Nifty 50
   Concentration risk : 0 fund(s) > 30% of portfolio
   Allocation status  : Imbalanced  (actual equity 80% vs recommended 61%)
   Expense drag (20yr): Rs 5,000  [0 over 30 years]
+=======
+  Underperformers    : 26 fund(s) below Nifty 50
+  Concentration risk : 1 fund(s) > 25% of portfolio
+  Allocation status  : Imbalanced  (actual equity 100% vs recommended 68%)
+  Expense drag (20yr): Rs 3,585,340  [Rs 16,137,422 over 30 years]
+>>>>>>> Stashed changes
 
 RECOMMENDED ACTIONS
 ----------------------------------------

@@ -1,7 +1,7 @@
 """
 Agent 6 — Executor
 Converts the rebalancing plan into a formatted, downloadable action memo
-that an investor can hand to their mutual fund distributor or use on an MFD platform.
+outlining portfolio flags, trade-offs, and rebalancing steps.
 """
 import os
 from datetime import date
@@ -57,7 +57,7 @@ def generate_memo(state: dict) -> str:
         f'  Funds     : {n_funds} folios analysed',
         f'  Value     : Rs {total_val:,.0f}',
         f'  Score     : {score:.0f}/100  '
-        + ('(Good)' if score >= 75 else '(Needs Attention)' if score >= 50 else '(Critical — Act Now)'),
+        + ('(Good)' if score >= 75 else '(Needs Attention)' if score >= 50 else '(Critical — Review Flags)'),
         '=' * 64,
         '',
         'EXECUTIVE SUMMARY',
@@ -69,11 +69,11 @@ def generate_memo(state: dict) -> str:
         f'  Overlap toxicity   : {overlap.get("toxicity_score", 0)}/100'
         + ('  [HIGH - action needed]' if overlap.get('toxicity_score', 0) > 50 else '  [Acceptable]'),
         f'  Underperformers    : {len(diag.get("underperformers", []))} fund(s) below Nifty 50',
-        f'  Concentration risk : {len(diag.get("concentration", []))} fund(s) > 30% of portfolio',
+        f'  Concentration risk : {len(diag.get("concentration", []))} fund(s) > 25% of portfolio',
         f'  Allocation status  : {"Balanced" if alloc.get("is_balanced") else "Imbalanced"}  '
         f'(actual equity {alloc.get("actual_equity_pct", 0):.0f}% vs recommended {alloc.get("recommended_equity_pct", 0):.0f}%)',
         f'  Expense drag (20yr): Rs {expense.get("total_drag_20yr_inr", 0):,.0f}  '
-        f'[{expense.get("total_drag_30yr_inr", 0):,.0f} over 30 years]',
+        f'[Rs {expense.get("total_drag_30yr_inr", 0):,.0f} over 30 years]',
         '',
         'RECOMMENDED ACTIONS',
         '-' * 40,
@@ -90,6 +90,10 @@ def generate_memo(state: dict) -> str:
             timing = action.get('timing', 'Immediate')
             curr_sip = action.get('current_sip')
             new_sip  = action.get('new_sip')
+
+            # Resolve SIP-reduction / LTCG timing muddle: SIP cashflows have no capital gains
+            if ('SIP' in action.get('action_type', '') or 'sip' in label.lower()) and 'LTCG' in timing:
+                timing = 'Immediate'
 
             lines += [
                 f'{i:2}. [{label}]  {fund}',
@@ -142,9 +146,11 @@ def generate_memo(state: dict) -> str:
         lines += ['FUND VERDICTS SUMMARY', '-' * 40]
         for v in verdicts:
             icon = _verdict_emoji(v.get('verdict', '?'))
+            raw_v_xirr = v.get('xirr')
+            xirr_str = f"XIRR {raw_v_xirr:.1f}%" if raw_v_xirr is not None else "XIRR: Insufficient history"
             lines.append(
                 f'  {icon}  {v["fund"][:45]:<45}  '
-                f'Conviction {v.get("conviction", "?")}/10  |  XIRR {v.get("xirr", 0):.1f}%'
+                f'Conviction {v.get("conviction", "?")}/10  |  {xirr_str}'
             )
         lines.append('')
 

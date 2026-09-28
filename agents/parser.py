@@ -92,8 +92,38 @@ def parse_regex(text: str) -> list[dict]:
 
 def parse_llm_fallback(text: str) -> list[dict]:
     snippet = text[:4000]
+<<<<<<< Updated upstream
     prompt = f"Extract ALL mutual fund folio data from this text. Return ONLY JSON array.\nText:\n{snippet}"
     raw = chat([{'role': 'user', 'content': prompt}], temperature=0.1, max_tokens=2000)
+=======
+    # Privacy redactions (Tier-2 LLM fallback)
+    snippet = re.sub(r'[A-Z]{5}[0-9]{4}[A-Z]', '[PAN REDACTED]', snippet)
+    snippet = re.sub(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b', '[EMAIL REDACTED]', snippet, flags=re.IGNORECASE)
+    snippet = re.sub(r'(?i)\b(investor(?:\s*name)?|name\s*of\s*(?:the\s*)?unit\s*holder|holder(?:\s*name)?|name)\s*[:\-]\s*[A-Za-z\.\'\t ]+', r'\1: [NAME REDACTED]', snippet)
+    snippet = re.sub(r'(?i)\b(folio(?:\s*no\.?|\s*number)?|account(?:\s*no\.?|\s*number)?)\s*[:\-]?\s*([A-Za-z0-9\/\-_]+)', r'\1: [FOLIO REDACTED]', snippet)
+    snippet = re.sub(r'(?i)\b(?:mobile|phone|contact)\s*[:\-]?\s*\+?[0-9\-\s]{10,14}\b', '[PHONE REDACTED]', snippet)
+    prompt = f'''
+        You are a financial data extractor. Extract ALL mutual fund folio data from
+        this CAMS/KFintech statement text. Return ONLY valid JSON, no markdown.
+        Format:
+        [{{
+        "folio": "folio number",
+        "scheme_name": "full scheme name",
+        "isin": "ISIN code or empty string",
+        "total_units": current balance units as number,
+        "transactions": [
+        {{"date": "DD-Mon-YYYY", "type": "Purchase/SIP",
+        "amount": number, "units": number, "nav": number}}
+        ]
+        }}]
+        Statement text:
+        {snippet}
+        '''
+    raw = chat([{'role': 'user', 'content': prompt}], temperature=0.1,max_tokens=2000)
+
+    # prompt = f"Extract ALL mutual fund folio data from this text. Return ONLY JSON array.\nText:\n{snippet}"
+    # raw = chat([{'role': 'user', 'content': prompt}], temperature=0.1, max_tokens=2000)
+>>>>>>> Stashed changes
     raw = re.sub(r'^```json\s*|^```\s*|```$', '', raw.strip(), flags=re.MULTILINE).strip()
     try:
         return json.loads(raw)

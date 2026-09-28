@@ -108,7 +108,7 @@ def _build_triggers(state: dict) -> list[dict]:
       HIGH_CONVICTION_SELL  — Debate Club EXIT/TRIM with conviction >= 7
       HIGH_OVERLAP          — portfolio overlap toxicity score > 60
       ALLOCATION_IMBALANCE  — equity/debt split deviates > 10% from recommendation
-      CONCENTRATION_RISK    — single fund > 30% of portfolio
+      CONCENTRATION_RISK    — single fund > 25% of portfolio
     """
     diag     = state.get('diagnostics', {})
     verdicts = state.get('verdicts', [])
@@ -169,7 +169,7 @@ def _build_triggers(state: dict) -> list[dict]:
         triggers.append({
             'fund_name':     c['scheme'][:100],
             'trigger_type':  'CONCENTRATION_RISK',
-            'threshold':     'Single fund > 30% of portfolio',
+            'threshold':     'Single fund > 25% of portfolio',
             'current_value': f'{c["pct"]}% of portfolio (Rs {c["current_value"]:,.0f})',
         })
 
