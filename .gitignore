@@ -2,7 +2,7 @@ venv/
 .env
 __pycache__/
 *.pyc
-data/watchlist.db
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
