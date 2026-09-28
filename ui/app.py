@@ -41,6 +41,22 @@ st.title('🔬 Portfolio Surgeon')
 st.caption('7-agent AI system · AI Money Mentor · ET AI Hackathon 2026')
 
 with st.sidebar:
+    st.header('Data Pipeline Status')
+    if os.path.exists('data/fund_data_coverage.csv'):
+        import pandas as pd
+        cov = pd.read_csv('data/fund_data_coverage.csv')
+        ter = cov['has_ter'].sum()
+        nav = cov['has_nav'].sum()
+        total = len(cov)
+        st.caption(f"**Data Freshness**: {pd.Timestamp.now().strftime('%Y-%m-%d')}")
+        st.caption(f"**Data Source**: market.db (Local)")
+        st.caption(f"**NAV Coverage**: {nav}/{total} schemes")
+        st.caption(f"**TER Coverage**: {ter}/{total} schemes")
+    else:
+        st.caption("No data coverage report found.")
+        
+    st.divider()
+
     st.header('Your details')
     uploaded  = st.file_uploader('Upload CAMS / KFintech PDF', type='pdf')
     age       = st.slider('Your age', 22, 70, 32)

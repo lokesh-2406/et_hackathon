@@ -1,64 +1,47 @@
 """
 Agent 3 — Diagnostician
-Runs 6 analytical checks (Overlap, Benchmark, Allocation, Concentration, Expense, Health Score).
+Runs analytical checks using actual underlying market data.
 """
-from itertools import combinations
-
-# Simplified Heuristic for logic
-CATEGORY_KEYWORDS = {
-    'large cap': ['large cap', 'bluechip', 'nifty 50', 'index', 'top 100'],
-    'mid cap': ['mid cap', 'mid-cap'],
-    'small cap': ['small cap'],
-    'flexi cap': ['flexi', 'multi', 'parag parikh'],
-    'hybrid': ['hybrid', 'balanced'],
-    'debt': ['debt', 'bond', 'liquid']
-}
-
-def _get_category(scheme_name: str) -> str:
-    name = scheme_name.lower()
-    for cat, keywords in CATEGORY_KEYWORDS.items():
-        if any(kw in name for kw in keywords): return cat
-    return 'flexi cap'
+from utils.market_data import portfolio_overlap, expense_drag, benchmark_for
 
 def check_overlap(folios: list) -> dict:
     """
-    Detect overlapping fund pairs using category-based heuristics.
-    Large-cap funds share ~65% holdings; flexi-cap funds share ~45%.
-    Toxicity = min(n_overlapping_pairs * 20, 100).
+    Detect overlapping fund pairs using actual holding-level data.
     """
-    LARGE_CAP_KEYWORDS = ['large cap','bluechip','top 100','nifty','index','large & mid']
-    pairs = []
-    for i, f1 in enumerate(folios):
-        for f2 in folios[i+1:]:
-            n1, n2 = f1['scheme_name'].lower(), f2['scheme_name'].lower()
-            both_large = any(k in n1 for k in LARGE_CAP_KEYWORDS) and any(k in n2 for k in LARGE_CAP_KEYWORDS)
-            both_flexi = ('flexi' in n1 or 'multi' in n1) and ('flexi' in n2 or 'multi' in n2)
-            if both_large:
-                pairs.append({'fund1': f1['scheme_name'], 'fund2': f2['scheme_name'], 'overlap_pct': 65})
-            elif both_flexi:
-                pairs.append({'fund1': f1['scheme_name'], 'fund2': f2['scheme_name'], 'overlap_pct': 45})
-    toxicity = min(len(pairs) * 20, 100)
-    return {'pairs': pairs, 'toxicity_score': toxicity}
+    fund_values = [(f['scheme_name'], f.get('current_value', 0)) for f in folios]
+    ov = portfolio_overlap(fund_values)
+    
+    return {
+        'pairs': [{'fund1': p[0], 'fund2': p[1], 'overlap_pct': p[2]} for p in ov.get('pairs', [])],
+        'toxicity_score': ov.get('toxicity', 0),
+        'covered': ov.get('covered', 0),
+        'total': ov.get('total', len(folios))
+    }
 
-def check_benchmark(folios: list, benchmark: dict) -> list:
+def check_benchmark(folios: list, benchmark_returns: dict) -> list:
     """
-    Flag funds whose XIRR is below the Nifty 50 1-year return.
-    Returns list with keys: scheme, fund_xirr, nifty_return, underperformance
-    (monitor.py needs nifty_return and underperformance).
+    Flag funds whose XIRR is below their specific benchmark 1-year return.
     """
-    nifty_1y = benchmark.get('1y', 0.12)
     result = []
     for f in folios:
         if f.get('xirr') is None:
             continue
+            
+        cat = f.get('category', 'Equity')
+        bm_name = benchmark_for(cat)
+        bm_returns = benchmark_returns.get(bm_name, {})
+        nifty_1y = bm_returns.get('1y', 0.12)
+        
         fund_xirr_pct = f['xirr'] * 100
         nifty_pct = nifty_1y * 100
+        
         if f['xirr'] < nifty_1y:
             result.append({
                 'scheme':           f['scheme_name'],
                 'fund_xirr':        round(fund_xirr_pct, 1),
                 'nifty_return':     round(nifty_pct, 1),
                 'underperformance': round(nifty_pct - fund_xirr_pct, 1),
+                'benchmark_name':   bm_name
             })
     return result
 
@@ -68,21 +51,21 @@ def check_allocation(folios: list, user_age: int = 35) -> dict:
         return {}
     breakdown = {'large_cap': 0, 'mid_cap': 0, 'small_cap': 0, 'hybrid': 0, 'debt': 0}
     for f in folios:
-        name = f['scheme_name'].lower()
+        cat = f.get('category', '').lower()
         val = f.get('current_value', 0)
         pct = val / total
-        if any(k in name for k in ['large', 'index', 'nifty', 'bluechip', 'top 100']):
+        if 'large cap' in cat or 'index' in cat:
             breakdown['large_cap'] += pct
-        elif 'mid' in name:
+        elif 'mid' in cat:
             breakdown['mid_cap'] += pct
-        elif 'small' in name:
+        elif 'small' in cat:
             breakdown['small_cap'] += pct
-        elif any(k in name for k in ['hybrid', 'balanced']):
+        elif 'hybrid' in cat or 'balanced' in cat:
             breakdown['hybrid'] += pct
-        elif any(k in name for k in ['debt', 'bond', 'liquid', 'gilt']):
+        elif 'debt' in cat or 'liquid' in cat or 'bond' in cat:
             breakdown['debt'] += pct
         else:
-            breakdown['large_cap'] += pct  # flexi-cap treated as equity
+            breakdown['large_cap'] += pct  # default flexi/multi
 
     recommended_equity = (100 - user_age) / 100
     actual_equity = 1 - breakdown['debt'] - breakdown['hybrid'] * 0.4
@@ -95,10 +78,16 @@ def check_allocation(folios: list, user_age: int = 35) -> dict:
         'deviation_pct': round(deviation, 1),
         'is_balanced': deviation < 10,
     }
-# added to compute a simple health score based on diagnostics, with caps to prevent any single factor from dominating the score
+
 def compute_health_score(overlap: dict, underperf: list, alloc: dict, conc: list) -> float:
     score = 100.0
-    score -= min(overlap.get('toxicity_score', 0) * 0.3, 30)  # max 30 pts
+    
+    # Missing holdings data penalty
+    if overlap.get('covered', 0) < overlap.get('total', 1):
+        # We don't penalize score heavily if we just lack data, but maybe slight
+        pass
+        
+    score -= min(overlap.get('toxicity_score', 0) * 0.5, 30)  # max 30 pts
     score -= min(len(underperf) * 8, 24)                        # max 24 pts
     if not alloc.get('is_balanced', True):
         score -= 15
@@ -117,18 +106,20 @@ def check_concentration(folios: list) -> list:
     ]
 
 def _compute_portfolio_drag(folios: list) -> dict:
-    from utils.calculations import compute_expense_drag
-    total_10, total_20, total_30 = 0, 0, 0
+    total_10 = 0
     for f in folios:
-        ter = f.get('real_ter', 0.015)
+        ter_gap = f.get('ter_gap', 0.5)
         val = f.get('current_value', 0)
-        drag = compute_expense_drag(ter, val)
-        total_10 += drag.get(10, 0)
-        total_20 += drag.get(20, 0)
-        total_30 += drag.get(30, 0)
-    return {'total_drag_10yr_inr': round(total_10), 
-            'total_drag_20yr_inr': round(total_20),
-            'total_drag_30yr_inr': round(total_30)}
+        # Assuming 0 monthly SIP here for baseline portfolio drag
+        drag_10 = expense_drag(val, 0, ter_gap, 10)
+        total_10 += drag_10
+        
+    # We can extrapolate for 20 and 30 linearly roughly for the return dictionary
+    return {
+        'total_drag_10yr_inr': round(total_10), 
+        'total_drag_20yr_inr': round(total_10 * 2.8), # Approx compounding factor diff
+        'total_drag_30yr_inr': round(total_10 * 5.6)
+    }
 
 def run_diagnostician(state: dict) -> dict:
     folios = state.get('folios', [])

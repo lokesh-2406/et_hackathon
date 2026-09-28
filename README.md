@@ -535,11 +535,18 @@ portfolio-surgeon/
 │
 ├── utils/
 │   ├── llm.py                 # Groq client wrapper with retry logic
-│   ├── mfapi.py               # mfapi.in client + AMFI fallback
+│   ├── market_data.py         # Local SQLite DAO for fast canonical fund data
 │   ├── calculations.py        # XIRR, expense drag, date parsing
-│   ├── benchmark.py           # Nifty 50 CAGR computation
-│   ├── fund_lookup.py         # Fuzzy scheme name → scheme code matching
 │   └── tax.py                 # STCG / LTCG classification
+│
+├── data_pipeline/             # Batch ingestion scripts for AMFI, NSE, and Value Research
+│   ├── 01_fetch_ter.py
+│   ├── 02_fetch_tri.py
+│   ├── 03_fetch_navs.py
+│   ├── 04_load_holdings.py
+│   ├── 05_build_peer_stats.py
+│   ├── 07_build_db.py         # Builds market.db from raw/processed data
+│   └── run_pipeline.py        # Orchestrates the ETL jobs
 │
 ├── ui/
 │   ├── app.py                 # Streamlit 5-tab application
